@@ -1,0 +1,316 @@
+#include<iostream>
+using namespace std;
+#include "iGraphics.h"
+
+#define screenwidth 1100
+#define screenheight 900
+
+
+bool musicOn = true;
+int baad = 0;
+
+int r = 255;
+int g = 255;
+int b = 255;
+
+
+/*the main coordinaton where all start*/
+int main_x = 100;
+int main_y = 200;
+
+
+/*top-right coordination of the rectangle*/
+int topright_x = 1000;
+int topright_y = 900;
+
+
+
+
+int ball_radius = 10; // radius of each ball
+
+
+/* coordination of ball 1*/
+int ball_1_x = 100;
+int ball_1_y = 220;
+
+
+/*coordination change of ball 1 per 1 change*/
+int dx = 10;
+int dy = 10;
+
+
+
+/* coordination of ball 2*/
+int ball_2_x = 550;
+int ball_2_y = 560;
+
+
+/*coordination change of ball 2 per 1 change*/
+int dx2 = 10;
+int dy2 = 10;
+
+
+
+/* coordination of ball 3*/
+int ball_3_x = 900;
+int ball_3_y = 890;
+
+
+
+/*coordination change of ball 3 per 1 change*/
+int dx3 = -10;
+int dy3 = -10;
+
+
+char s[1][200] = { "image\\milky.bmp" }; // image path
+
+
+/*coordination of the plate */
+int plate_x = 480; //  width space =  (lefttline_x - leftline_x)/2 = (1010-90)/2 = 460; starting point of plate = 460+90=550. final x point of plate = 550-(platesize/2) = 550-(140/2)=480
+int plate_y = 190; // lowerline of rectangle's y axis;
+
+
+
+
+/*background image's coordination*/
+int bg_image_x = main_x - ball_radius; // 100-10
+int bg_image_y = main_y - ball_radius; // 200-10
+
+
+
+/* rgb color code of balls, rectangular and plate*/
+int r1 = 194;
+int g1 = 24;
+int b1 = 7;
+
+
+int r2 = 116;
+int g2 = 190;
+int b2 = 88;
+
+
+
+int r3 = 119;
+int g3 = 200;
+int b3 = 205;
+
+
+int rec_r = 0;
+int rec_g = 105;
+int rec_b = 148;
+
+int pla_r = 100;
+int pla_g = 100;
+int pla_b = 100;
+
+
+
+/*plate dimension*/
+int plate_width = 140;
+int plate_height = 15;
+
+
+/*drawing part*/
+void iDraw()
+{
+
+	iClear();
+	iShowBMP(bg_image_x, bg_image_y, s[0]); // (90,100,s[0] // image show
+
+
+	/*ball 1 draw */
+	iSetColor(r1, g1, b1); // ball 1 color
+	iFilledCircle(ball_1_x, ball_1_y, ball_radius, 1000); // making of ball 1
+
+
+	/*ball 2 draw*/
+	iSetColor(r2, g2, b2); // ball 2 color
+	iFilledCircle(ball_2_x, ball_2_y, ball_radius, 1000); // making of ball 2
+
+
+	/*ball 3 draw*/
+	iSetColor(r3, g3, b3); // ball 3 color
+	iFilledCircle(ball_3_x, ball_3_y, ball_radius, 1000); // making of ball 3
+
+
+
+
+	/*rectangle making*/
+	iSetColor(rec_r, rec_g, rec_b); // color of rectangle
+
+	iLine(main_x - ball_radius, main_y - ball_radius, topright_x + ball_radius, main_y - ball_radius);  ///100 - 10, 200 - 10, 1000 + 10, 200 - 10
+	iLine(topright_x + ball_radius, main_y - ball_radius, topright_x + ball_radius, topright_y + ball_radius);   // 1000 + 10, 200 - 10, 1000 + 10, 900 + 10
+	iLine(topright_x + ball_radius, topright_y + ball_radius, main_x - ball_radius, topright_y + ball_radius);   // 1000 + 10, 900 + 10, 100 - 10, 900 + 10
+	iLine(main_x - ball_radius, main_y - ball_radius, main_x - ball_radius, topright_y + ball_radius);   //100 - 10, 200 - 10, 100 - 10, 900 + 10
+
+
+	iSetColor(pla_r, pla_g, pla_b); // color of plate
+	iFilledRectangle(plate_x, plate_y, plate_width, plate_height); // making of plate
+
+
+
+	//iText(x, y, "why always me", GLUT_BITMAP_TIMES_ROMAN_24);
+
+
+
+
+}
+
+
+
+
+void iMouseMove(int mx, int my)
+{
+
+}
+
+void iPassiveMouseMove(int mx, int my)
+{
+
+}
+
+void iMouse(int button, int state, int mx, int my)
+{
+
+}
+
+
+
+void iKeyboard(unsigned char key)
+{
+
+}
+
+
+/* coordination change of the plate by arrow keys*/
+void iSpecialKeyboard(unsigned char key)
+{
+	int position_change = 50;
+
+	if (key == GLUT_KEY_RIGHT)
+	{
+
+		int right_range_of_plate = topright_x + ball_radius - position_change - plate_width;//1000+10-50-140plate width
+		if (plate_x <= right_range_of_plate)
+			plate_x += position_change; // pplate position increases by position change in x axis 
+		else
+		{
+
+			int pos_change = topright_x + ball_radius - (plate_x + plate_width); // 1000+10-currentpositonofplate_x - 140;
+			plate_x += pos_change;
+		}
+	}
+
+
+	else if (key == GLUT_KEY_LEFT)
+	{
+
+		if (plate_x >= plate_width) plate_x -= position_change; //plate_x -= 50; // 90+50
+		else
+		{
+			int pos_change = plate_x - main_x + ball_radius;//plate_x - 90; 
+			plate_x -= pos_change;
+		}
+	}
+
+	/*else if (key == GLUT_KEY_UP)
+	{
+
+	}
+	else if (key == GLUT_KEY_DOWN)
+	{
+	Y -= 10;
+	}
+
+	else if (key == GLUT_KEY_HOME)
+	{
+
+	}*/
+}
+
+
+/*coordination change of all balls*/
+void change()
+{
+	/*change of all balls coordination*/
+	ball_1_x += dx;
+	ball_1_y += dy;
+
+
+	ball_2_x += dx2;
+	ball_2_y += dy2;
+
+	ball_3_x += dx3;
+	ball_3_y += dy3;
+
+
+	/*existance of ball one*/
+	if (ball_1_x >= screenwidth - main_x || ball_1_x <= main_x)
+		dx *= (-1);
+
+	if (ball_1_y >= screenheight)
+		dy *= (-1);
+
+	if (ball_1_y == 210)
+	{
+		if (ball_1_x <= plate_x + plate_width && ball_1_x >= plate_x) dy *= (-1);
+		else baad++;
+	}
+
+
+
+	/*existance of ball two*/
+	if (ball_2_x >= screenwidth - main_x || ball_2_x <= main_x)
+		dx2 *= (-1);
+
+	if (ball_2_y >= screenheight)
+		dy2 *= (-1);
+
+	if (ball_2_y == 210)
+	{
+
+		if (ball_2_x <= plate_x + plate_width && ball_2_x >= plate_x) dy2 *= (-1);
+		else baad++;
+
+	}
+
+
+
+	/*existance of ball three*/
+	if (ball_3_x >= screenwidth - main_x || ball_3_x <= main_x)
+		dx3 *= (-1);
+
+
+
+	if (ball_3_y >= screenheight)
+		dy3 *= (-1);
+
+	if (ball_3_y == 210)
+	{
+		if (ball_3_x <= plate_x + plate_width && ball_3_x >= plate_x) dy3 *= (-1);
+		else baad++;
+	}
+
+	
+
+
+}
+
+
+
+int main()
+{
+
+	///srand((unsigned)time(NULL));
+	iSetTimer(25, change);
+
+	if (musicOn)
+	{
+		PlaySound("music\\sondia.wav", NULL, SND_LOOP | SND_ASYNC);
+	}
+	iInitialize(screenwidth, screenwidth, "Game Project");
+	///updated see the documentations
+	iStart();
+	
+	return 0;
+}
